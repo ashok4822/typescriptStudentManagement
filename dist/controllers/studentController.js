@@ -10,90 +10,115 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StudentController = void 0;
-// student controller class to handle all the routes related to student
 class StudentController {
-    // constructor to inject the service into the controller
     constructor(studentService) {
         this.studentService = studentService;
     }
-    // get all students
+    // Get all students
     getAllStudents(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const students = yield this.studentService.getAllStudents();
-                if (students) {
-                    res.status(200).json({ message: 'Students fetched successfully', students });
-                }
-                else {
-                    res.status(404).json({ message: 'Students not found' });
-                }
+                const response = {
+                    success: true,
+                    message: "Students fetched successfully",
+                    data: students,
+                };
+                res.status(200).json(response);
             }
             catch (error) {
-                res.status(500).json({ message: 'failed to fetch students', error });
+                const response = {
+                    success: false,
+                    message: "Failed to fetch students",
+                    error,
+                };
+                res.status(500).json(response);
             }
         });
     }
-    // get student by id
+    // Get student by ID
     getStudentById(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const student = yield this.studentService.getStudentsById(req.params.id);
-                if (student) {
-                    res.status(200).json({ message: 'Student fetched successfully', student });
+                if (!student) {
+                    res.status(404).json({ success: false, message: "Student not found" });
+                    return;
                 }
-                else {
-                    res.status(404).json({ message: 'student not found' });
-                }
+                const response = {
+                    success: true,
+                    message: "Student fetched successfully",
+                    data: student,
+                };
+                res.status(200).json(response);
             }
             catch (error) {
-                res.status(500).json({ message: 'failed to fetch data', error });
+                res
+                    .status(500)
+                    .json({ success: false, message: "Failed to fetch student", error });
             }
         });
     }
-    // create student
+    // Create student
     createStudent(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const student = yield this.studentService.createStudent(req.body);
-                res.status(200).json({ message: 'Student created successfully', student });
+                const response = {
+                    success: true,
+                    message: "Student created successfully",
+                    data: student,
+                };
+                res.status(201).json(response);
             }
             catch (error) {
-                res.status(500).json({ message: 'failed to create student', error });
+                res
+                    .status(500)
+                    .json({ success: false, message: "Failed to create student", error });
             }
         });
     }
-    // update student
+    // Update student
     updateStudent(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const student = yield this.studentService.updateStudent(req.params.id, req.body);
-                console.log(req.params.id, req.body);
-                if (student) {
-                    res.status(200).json({ message: 'Student updated successfully', student });
+                if (!student) {
+                    res.status(404).json({ success: false, message: "Student not found" });
+                    return;
                 }
-                else {
-                    res.status(404).json({ message: 'Student not Found' });
-                }
+                const response = {
+                    success: true,
+                    message: "Student updated successfully",
+                    data: student,
+                };
+                res.status(200).json(response);
             }
             catch (error) {
-                res.status(500).json({ message: 'Failed to update Student', error });
+                res
+                    .status(500)
+                    .json({ success: false, message: "Failed to update student", error });
             }
         });
     }
-    // delete student
+    // Delete student
     deleteStudent(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const isDeleted = yield this.studentService.deleteStudent(req.params.id);
                 if (isDeleted) {
-                    res.status(200).json({ message: 'Student deleted successfully' });
+                    res
+                        .status(200)
+                        .json({ success: true, message: "Student deleted successfully" });
                 }
                 else {
-                    res.status(404).json({ message: 'Student not found' });
+                    res.status(404).json({ success: false, message: "Student not found" });
                 }
             }
             catch (error) {
-                res.status(500).json({ message: 'Failed to delete Student', error });
+                res
+                    .status(500)
+                    .json({ success: false, message: "Failed to delete student", error });
             }
         });
     }

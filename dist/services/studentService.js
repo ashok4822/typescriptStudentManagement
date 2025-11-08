@@ -11,31 +11,46 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.StudentService = void 0;
 const student_1 = require("../models/student");
-// student service class to handle all the business logic related to student meaning CRUD operations
+// student service class to handle all the business logic related to students
 class StudentService {
+    // Convert database document to response DTO
+    mapToResponse(student) {
+        return {
+            id: student._id.toString(),
+            name: student.name,
+            age: student.age,
+            place: student.place,
+        };
+    }
     // get all students
     getAllStudents() {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield student_1.Student.find();
+            const students = yield student_1.Student.find();
+            return students.map((s) => this.mapToResponse(s));
         });
     }
     // get student by id
     getStudentsById(id) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield student_1.Student.findById(id);
+            const student = yield student_1.Student.findById(id);
+            return student ? this.mapToResponse(student) : null;
         });
     }
     // create student
     createStudent(studentData) {
         return __awaiter(this, void 0, void 0, function* () {
             const student = new student_1.Student(studentData);
-            return yield student.save();
+            const saved = yield student.save();
+            return this.mapToResponse(saved);
         });
     }
     // update student
     updateStudent(id, updateStudent) {
         return __awaiter(this, void 0, void 0, function* () {
-            return yield student_1.Student.findByIdAndUpdate(id, updateStudent, { new: true });
+            const updated = yield student_1.Student.findByIdAndUpdate(id, updateStudent, {
+                new: true,
+            });
+            return updated ? this.mapToResponse(updated) : null;
         });
     }
     // delete student

@@ -39,6 +39,6 @@ const mongoose_1 = __importStar(require("mongoose"));
 const StudentSchema = new mongoose_1.Schema({
     name: { type: String, required: true },
     age: { type: Number, required: true },
-    place: { type: String, required: true }
+    place: { type: String, required: true },
 });
-exports.Student = mongoose_1.default.model('Student', StudentSchema);
+exports.Student = mongoose_1.default.model("Student", StudentSchema);
